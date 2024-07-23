@@ -69,3 +69,7 @@ button {
     padding: 10px;
     font-size: large;
 }
+
+.error-item {
+    background-color: red;
+}

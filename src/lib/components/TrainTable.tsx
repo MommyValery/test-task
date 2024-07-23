@@ -1,13 +1,13 @@
 import React from "react";
 import { TrainData } from "../../types";
-import { trains_data } from "../../mocks";
+// import { trains_data } from "../../mocks";
 
 type Props = {
+  trains : TrainData[];
   onClick: (train: TrainData) => void;
 };
 
-const MainTable = ({ onClick }: Props) => {
-  const trains: TrainData[] = trains_data;
+const MainTable = ({ trains, onClick }: Props) => {
 
   return (
     <table>

@@ -1,6 +1,4 @@
-
-export const trains_data = [
-    {
+  export const trains_data = [  {
         "name": "Поезд №0",
         "description": "Описание 0",
         "characteristics": [
