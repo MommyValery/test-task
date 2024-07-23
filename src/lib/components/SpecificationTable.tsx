@@ -31,12 +31,9 @@ const blurHandler = (evt: React.ChangeEvent<HTMLInputElement>) => {
      Number.isInteger(+inputValue.value)) ) {
       isValid = false;
     }
-    !isValid ? inputValue.style.backgroundColor = 'red'
-    : inputValue.style.backgroundColor = 'white';
+    inputValue.style.backgroundColor = !isValid ? 'red' : 'white';
     setValidState(isValid);
 }
-
-
 
 useEffect(() => {
   setEditedChar([...characteristics]);
@@ -53,9 +50,16 @@ const handleInputChange = (evt: React.ChangeEvent<HTMLInputElement>, index: numb
       dispatch(updateInput(+value));
     };
 
+    const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
+      evt.preventDefault();
+      const speedLimits = editedChar.map(char => +char.speed);
+      const sortedSpeedLimits = speedLimits.sort((a, b) => a - b);
+      console.log(sortedSpeedLimits);
+      onClose();
+    }
 
 return (
-    <form onSubmit={onClose}>
+    <form onSubmit={handleSubmit}>
       <table id="characteristics-table">
         <caption>Характеристики</caption>
         <caption>{name}</caption>
