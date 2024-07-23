@@ -17,20 +17,26 @@ const [validState, setValidState] = useState<boolean>(true);
 
 const blurHandler = (evt: React.ChangeEvent<HTMLInputElement>) => {
   const inputValue = evt.target;
+  let isValid = true;
     if (inputValue.name === 'engineAmperage' &&
        (+inputValue.value <= 0 ||
       !Number.isInteger(+inputValue.value)) ) {
-    setValidState(false);
+    isValid = false;
     } else if (inputValue.name === 'speed' &&
       (+inputValue.value < 0 ||
      !Number.isInteger(+inputValue.value)) ) {
-      setValidState(false);
+      isValid = false;
     } else if (inputValue.name === 'force' &&
       (+inputValue.value <= 0 ||
      Number.isInteger(+inputValue.value)) ) {
-      setValidState(false);
+      isValid = false;
     }
+    !isValid ? inputValue.style.backgroundColor = 'red'
+    : inputValue.style.backgroundColor = 'white';
+    setValidState(isValid);
 }
+
+
 
 useEffect(() => {
   setEditedChar([...characteristics]);
@@ -101,7 +107,7 @@ return (
           ))}
         </tbody>
       </table>
-      <button type="submit">Отправить данные</button>
+      <button type="submit" disabled={!validState}>Отправить данные</button>
     </form>
   );
 }
