@@ -1,40 +1,50 @@
 
-import React, { useState } from "react";
-import { InputState, TrainData } from "../../types";
-import {useSelector, useDispatch} from 'react-redux';
-import { updateInput } from "../store/reducer";
+import React, { useEffect, useState } from "react";
+import { TrainData } from "../../types";
+import { useDispatch} from 'react-redux';
+import { updateInput } from "../store/slices/input-value/GetInputValue";
 
 type Props = {
   train: TrainData;
   onSubmit: () => void;
 };
 
-
-
- const CharacteristicTable = ({ train, onSubmit: onClose }: Props) => {
-    const { name, characteristics } = train; 
-    const inputValue = useSelector((state:InputState) => state.inputValue);
-    const dispatch = useDispatch();
+ const SpecificationTable = ({ train, onSubmit: onClose }: Props) => {
+  const { name, characteristics } = train; 
+  const dispatch = useDispatch();
 const [editedChar, setEditedChar] = useState([...characteristics]);
-const [dirtyForce, setDirtyForce] = useState<boolean>(false);
-const [dirtySpeed, setDirtySpeed] = useState<boolean>(false);
-const [DirtyAmperage, setDirtyAmperage] = useState<boolean>(false);
-const [currentForce, setForce] = useState<number |null>(null);
-const [currentSpeed, setSpeed] = useState<number|null>(null);
-const [currentAmperage, setAmperage] = useState<number|null>(null);
+const [validState, setValidState] = useState<boolean>(true);
 
 const blurHandler = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    if (evt.target.name === 'engineAmperage') {
-        setDirtyAmperage(true)
-    } else if (evt.target.name === 'speed') {
-        setDirtySpeed(true)
-    } else if (evt.target.name === 'force') {
-        setDirtyForce(true)
+  const inputValue = evt.target;
+    if (inputValue.name === 'engineAmperage' &&
+       (+inputValue.value <= 0 ||
+      !Number.isInteger(+inputValue.value)) ) {
+    setValidState(false);
+    } else if (inputValue.name === 'speed' &&
+      (+inputValue.value < 0 ||
+     !Number.isInteger(+inputValue.value)) ) {
+      setValidState(false);
+    } else if (inputValue.name === 'force' &&
+      (+inputValue.value <= 0 ||
+     Number.isInteger(+inputValue.value)) ) {
+      setValidState(false);
     }
 }
 
-const handleInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-      dispatch(updateInput(+evt.target.value));
+useEffect(() => {
+  setEditedChar([...characteristics]);
+}, [characteristics]);
+
+const handleInputChange = (evt: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const {name, value} = evt.target;
+  const updatedChars = [...editedChar];
+  updatedChars[index] = {
+    ...updatedChars[index],
+    [name]: value,
+  };
+  setEditedChar(updatedChars);
+      dispatch(updateInput(+value));
     };
 
 
@@ -55,34 +65,34 @@ return (
             <tr key={i}>
               <td>
                 <input
-                  type="number"
+                  type="text"
                   value={char.engineAmperage}
                   name="engineAmperage"
                   onChange={(evt) =>
-                    handleInputChange(evt)
+                    handleInputChange(evt, i)
                   }
                   onBlur={(evt) => blurHandler(evt)}
                 />
               </td>
               <td>
                 <input
-                  type="number"
+                  type="text"
                   value={char.force}
                   name="force"
                   onChange={(evt) =>
-                    handleInputChange(evt)
+                    handleInputChange(evt, i)
                   }
                   onBlur={(evt) => blurHandler(evt)}
                 />
               </td>
               <td>
                 <input
-                  type="number"
+                  type="text"
                   step={1}
                   name="speed"
                   value={char.speed}
                   onChange={(evt) =>
-                    handleInputChange(evt)
+                    handleInputChange(evt, i)
                   }
                   onBlur={(evt) => blurHandler(evt)}
                 />
@@ -96,4 +106,4 @@ return (
   );
 }
 
-export default CharacteristicTable;
+export default SpecificationTable;

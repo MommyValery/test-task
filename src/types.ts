@@ -1,5 +1,6 @@
 import { store } from "./lib/store";
 import { GetDataState } from "./lib/store/slices/data/GetDataSlice";
+import { GetInputState } from "./lib/store/slices/input-value/GetInputValue";
 
 export type TrainData = {
   name: string;
@@ -13,12 +14,12 @@ export type CharacteristicData = {
   engineAmperage: number;
 };
 
-export type InputState = {
-  inputValue: number | null;
-}
-
 export interface RootState {
   data: GetDataState
+}
+
+export interface InputState {
+  inputValue: GetInputState
 }
 
 export type State = ReturnType<typeof store.getState>;
